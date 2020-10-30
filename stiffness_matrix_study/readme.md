@@ -1,7 +1,9 @@
 This first study is led as an introduction to the fundamental concepts in Finite Element Method
 Analisys. For this porpouse it has been taken the example of a truss of beams joined together
-by hinges which allow movement only on the plane of the truss and constrained in
+by hinges (which allow movement only on the plane of the truss) and constrained in
 all degrees of freedom. The truss is under load imposed to one of the hinges. 
+
+![Scheme of the system](truss.png)
 
 To solve this system and find out the stress to which every beam is subjected it has been 
 used a generalized approach to free body diagram: 
