@@ -1,0 +1,99 @@
+! Clear ANSYS Mechanical APDL workspace
+Finish
+/clear,nostart 
+
+!----------------------- PRE PROCESSOR -------------------------
+/PREP7  
+! choice of the element
+ET,1,BEAM188
+! element characteristics
+KEYOPT,1,1,0
+KEYOPT,1,2,0
+KEYOPT,1,3,2
+KEYOPT,1,4,0
+KEYOPT,1,6,0
+KEYOPT,1,7,0
+KEYOPT,1,9,0
+KEYOPT,1,11,0   
+KEYOPT,1,12,0   
+KEYOPT,1,15,0   
+! material characteristics
+MPTEMP,,,,,,,,  
+MPTEMP,1,0  
+MPDATA,EX,1,,210000 
+MPDATA,PRXY,1,,0.3  
+! beam section
+SECTYPE,   1, BEAM, CTUBE, , 0  
+SECOFFSET, CENT 
+SECDATA,15.5,17,10,0,0,0,0,0,0,0,0,0 
+! geometry of the system
+*SET,L,1000 
+K,1,3*L/0.707,0,0   
+K,2,3*L/0.707,L/0.707,0 
+K,3,2*L/0.707,0,0   
+K,4,2*L/0.707,2*L/0.707,0   
+K,5,0,0,0   
+K,6,0,2*L/0.707,0   
+K,7,0,4*L/0.707,0   
+L,1,2   
+L,1,3   
+L,2,4   
+L,2,3   
+L,3,4   
+L,3,5   
+L,3,6   
+L,4,6   
+L,5,4   
+L,4,7   
+! mesh
+TYPE,   1   
+MAT,       1
+REAL,   
+ESYS,       0   
+SECNUM,   1 
+!*  
+FLST,5,10,4,ORDE,2  
+FITEM,5,1   
+FITEM,5,-10 
+CM,_Y,LINE  
+LSEL, , , ,P51X 
+CM,_Y1,LINE 
+CMSEL,,_Y   
+!*  
+LESIZE,_Y1, , ,1, , , , ,1  
+!*  
+FLST,2,10,4,ORDE,2  
+FITEM,2,1   
+FITEM,2,-10 
+LMESH,P51X  
+/UI,MESH,OFF   
+FINISH
+
+
+
+!---------------------- SOLUTION -----------------------------
+/SOL           
+! constrains 
+D,5, , , , , ,UX,UY,UZ, , , 
+D,6, , , , , ,UX,UY,UZ, , , 
+D,7, , , , , ,UX,UY,UZ, , , 
+! planar constrain for the whole structure
+D,ALL, , , , , ,  ,  ,UZ, , , 
+! force on loaded node
+F,1,FX,26000
+FCUM,ADD
+F,1,FY,-72000
+! solution itself
+ALLSEL,ALL
+SOLVE
+FINISH          
+
+
+!---------------------- POSTPORCESSOR --------------------------
+/POST1 
+/ESHAPE,3
+EPLOT 
+PLESOL, S,EQV, 0,1.0  !plot of the Von Mises stresses
+! nodal displacement
+PRNSOL,U,COMP   
+FINISH
